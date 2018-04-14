@@ -1,0 +1,72 @@
+<?php
+
+class Dictionary {
+
+    static function weirdWord() {
+        $weirdWords = array(
+            "rural",
+            "frugal",
+            "twin",
+            "santorum",
+            "detritus",
+            "entrepreneurial",
+            "pronounciation",
+            "moisture",
+            "peculiarly",
+            "crepuscular",
+            "ubiquitous",
+            "malarkey",
+            "bubbles",
+            "dude",
+            "torque",
+            "google",
+            "visualization",
+            "cliche",
+            "floccinaucinihilipilification",
+            "conundrums",
+            "doodlesack",
+            "volunteer",
+            "mississippilessly",
+            "calisthenics",
+            "serendipity",
+            "grommets",
+            "dilettante",
+            "macrosmatic",
+            "supercalifragilisticexpialidocious",
+            "flabergasted",
+            "sphygmomanometer",
+            "Kardashian",
+            "hubbub",
+            "prescription",
+            "caulking",
+            "wreath",
+            "expat",
+            "jentacular",
+            "schnapps",
+            "zdravstvuite",
+            "phlegm",
+            "specific",
+            "quproch",
+            "riboflavin",
+            "cubersome",
+            "garage",
+            "flummoxed",
+            "profiterole",
+            "ruler",
+            "dingleberry",
+            "egg",
+            "ombudsman",
+            "perpendicular",
+            "collate",
+            "abruptly",
+            "word",
+            "bitter",
+            "cellar",
+            "airworthy",
+            "stupendous"
+        );
+    
+        shuffle($weirdWords);
+        return array_slice($weirdWords, 0, 1)[0];
+    }
+}
