@@ -15,8 +15,8 @@
       <span class="navbar-brand" href="#">5 Things Generator</span>
     </div>
     <ul class="nav navbar-nav">
-      <li><a href="/">Home</a></li>
-      <li><a href="/activity/list">Activities</a></li>
+      <li><a href="<?php echo $basePath ?>/">Home</a></li>
+      <li><a href="<?php echo $basePath ?>/activity/list">Activities</a></li>
     </ul>
   </div>
 </nav>
