@@ -8,6 +8,7 @@ class Activity {
         $this->name = $act;
         $this->attributes = $attrs;
         $this->id = 0; // until it's written to the database
+        $this->dbh = getDbConnection();
     }
 
     public function getAttributes($howMany) {
@@ -42,7 +43,6 @@ class Activity {
 
     public static function getRandomActivity() {
         $dbh = getDbConnection();
-
         $stmt = $dbh->prepare("SELECT Id, Name FROM Activity a ORDER BY RANDOM() LIMIT 1");
         $stmt->execute();
         $row = $stmt->fetch();
@@ -81,9 +81,8 @@ class Activity {
 
     public function loadAttrs() {
         if ($this->id == 0) return array();
-        $dbh = getDbConnection();
         // todo - load the type also.  ActivityItem needs a class.
-        $stmt = $dbh->prepare("SELECT Name FROM ActivityItem WHERE ActivityId = :id");
+        $stmt = $this->dbh->prepare("SELECT Name FROM ActivityItem WHERE ActivityId = :id");
         $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
         $attrs = array();
         if ($stmt->execute()) {
@@ -94,24 +93,75 @@ class Activity {
         $this->attributes = $attrs;
     }
 
+    public function delete() {
+        if (!$this->id) return;
+        $this->dbh->beginTransaction();
+        try {
+            $stmt = $this->dbh->prepare("DELETE FROM Activity WHERE Id = :id");
+            $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $stmt = $this->dbh->prepare("DELETE FROM ActivityItem WHERE ActivityId = :id");
+            $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $this->dbh->commit();
+
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            $this->dbh->rollBack();
+            exit();
+        }
+    }
+
     public function save() {
-        $dbh = getDbConnection();
         if ($this->id > 0) {
             // this is an existing activity, so update it here
-            echo "TODO - UPDATE";
+
+            $this->dbh->beginTransaction();
+
+            try {
+
+                $stmt = $this->dbh->prepare("UPDATE Activity SET Name = :name WHERE Id = :id");
+                $stmt->bindParam(':name', $this->name);
+                $stmt->bindParam(':id', $this->id);
+                $stmt->execute();
+
+                $stmt = $this->dbh->prepare("DELETE FROM ActivityItem WHERE ActivityId = :id");
+                $stmt->bindParam(":id", $this->id);
+                $stmt->execute();
+
+                $type = "thing"; // todo
+
+                foreach ($this->attributes as $attr) {
+                    $stmt = $this->dbh->prepare("INSERT INTO ActivityItem (ActivityId, Type, Name) Values (:id, :type, :name)");
+                    $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+                    $stmt->bindParam(':type', $type, PDO::PARAM_STR);
+                    $stmt->bindParam(':name', $attr, PDO::PARAM_STR);
+                    $stmt->execute();
+                }
+
+                $this->dbh->commit();
+
+            } catch (Exception $e) {
+                echo $e->getMessage();
+                $this->dbh->rollBack();
+                exit();
+            }
+
         } else {
             // this is a new activity, so create it
-            $stmt = $dbh->prepare("INSERT INTO Activity (Name) Values(:name)");
+            $stmt = $this->dbh->prepare("INSERT INTO Activity (Name) Values(:name)");
             $stmt->bindParam(':name', $this->name);
             $result = $stmt->execute();
 
-            $id = $dbh->lastInsertId();
+            $id = $this->dbh->lastInsertId();
             $this->id = $id;
 
             $type = "thing"; // todo
 
             foreach ($this->attributes as $attr) {
-                $stmt = $dbh->prepare("INSERT INTO ActivityItem (ActivityId, Type, Name) Values (:id, :type, :name)");
+                $stmt = $this->dbh->prepare("INSERT INTO ActivityItem (ActivityId, Type, Name) Values (:id, :type, :name)");
                 $stmt->bindParam(':id', $id, PDO::PARAM_INT);
                 $stmt->bindParam(':type', $type, PDO::PARAM_STR);
                 $stmt->bindParam(':name', $attr, PDO::PARAM_STR);

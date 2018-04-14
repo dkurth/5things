@@ -6,6 +6,11 @@ $activities = Activity::getAll();
 include_once("html_head.php");
 ?>
 
+<h1>
+    Activities 
+    <a style="font-size:0.5em; float: right; margin-top: 15px;" href="/activity/edit">Create new</a>
+</h1>
+
 <input type="text" class="ft-filter" data-ft-filter-table="activity-list" placeholder="filter...">
 
 <table class="table table-condensed" id="activity-list">

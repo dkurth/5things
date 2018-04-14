@@ -1,5 +1,5 @@
 body {
-    width: 70%;
+    width: 400px;
     margin: auto;
     text-align: left;
     font-size: 3em;
@@ -11,10 +11,10 @@ body {
 }
 
 form {
-    margin-left: auto;
+/*    margin-left: auto;
     margin-right: auto;
     width: 400px;
-}
+*/}
 
 .navbar {
     font-size: 18px;
@@ -25,7 +25,16 @@ table {
     font-size: 14pt;
     background: #fff;
 }
+
 input.ft-filter {
     width: 100%;
     margin-bottom: 20px;
+}
+
+p.page-msg {
+    border-color: #4cae4c;
+    background-color: #5cb85c;
+    border: 1px solid transparent;
+    color: #fff;
+    padding: 3px;
 }
