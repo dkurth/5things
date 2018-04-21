@@ -1,16 +1,27 @@
-# Five Things
+# Slim Framework 3 Skeleton Application
 
-The 5 Things Generator is intended to facilitate rehearsing the game of 5 Things by automatically generating an active activity and three substitutions.
+Use this skeleton application to quickly setup and start working on a new Slim Framework 3 application. This application uses the latest Slim 3 with the PHP-View template renderer. It also uses the Monolog logger.
 
-The 5 Things Generator contains the following features:
-<ul>
-    <li>Random suggestions of active activities and associated substitutions pulled from a user-generated database</li>
-    <li>Substituted items drawn from a dictionary of nouns</li>
-    <li>Interface for users to add activities and substitutes to the database*</li>
-    <li>Ability for users to specify that items be replaced with person, animal, place, and/or thing</li>
-    <li>Text recognition to help minimize duplicated entries in the database</li>
-    <li>A searchable text document showing the contents of the database</li>
-</ul>
-This script was developed independently by a CSz player (who came up with the idea) and a software programmer (who did all the actual work). No endorsement from CSz or any other organization has been given or implied.
+This skeleton application was built for Composer. This makes setting up a new Slim Framework application quick and easy.
 
-*When entering suggestions, please enter only suggestions that would be accepted in a family-friendly match with the Brown-Bag foul in full effect.
+## Install the Application
+
+Run this command from the directory in which you want to install your new Slim Framework application.
+
+    php composer.phar create-project slim/slim-skeleton [my-app-name]
+
+Replace `[my-app-name]` with the desired directory name for your new application. You'll want to:
+
+* Point your virtual host document root to your new application's `public/` directory.
+* Ensure `logs/` is web writeable.
+
+To run the application in development, you can run these commands 
+
+	cd [my-app-name]
+	php composer.phar start
+
+Run this command in the application directory to run the test suite
+
+	php composer.phar test
+
+That's it! Now go build something cool.
