@@ -1,0 +1,17 @@
+<?php
+$replCount = 3;
+require('header.phtml');
+?>
+
+<p>You are <span class='activity'><?php echo $activity->name; ?></span>.</p>
+
+<?php
+foreach ($activity->randomActivityItems($replCount) as $item) {
+    $replItem = $replacements[--$replCount]->name;
+
+    echo "<p><span class='attr'>" . ucfirst($item->name) . "</span> " . \FiveThings\Utils::isAre($item->name) . " <span class='repl'>" . \FiveThings\Utils::aAn($replItem) . " " . $replItem . ".</span></p>";
+}
+?>
+
+</body>
+</html>
