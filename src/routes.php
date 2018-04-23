@@ -5,7 +5,8 @@ use Slim\Http\Response;
 
 // Routes
 
-// Show a random activity, with some attributes replaced:
+// Show a random activity, with some attributes replaced (the home screen):
+
 $app->get('/', function (Request $request, Response $response, array $args) {
     $activityLoader = $this['activity.loader'];
     $activity = $activityLoader->getRandomActivity(true);
@@ -17,6 +18,9 @@ $app->get('/', function (Request $request, Response $response, array $args) {
     ]);
 });
 
+
+// Listing all activities:
+
 $app->get('/activity/list', function (Request $request, Response $response, array $args) {
     $activityLoader = $this['activity.loader'];
     $activities = $activityLoader->getAll();
@@ -25,18 +29,52 @@ $app->get('/activity/list', function (Request $request, Response $response, arra
 })->setName('activity-list');
 
 
-$app->get('/activity/{id}', function (Request $request, Response $response, array $args) {
+// Creating and editing activities:
+
+$app->map(['GET', 'POST'], '/activity/{id}', function (Request $request, Response $response, array $args) {
+
     $activityLoader = $this['activity.loader'];
-    $activity = $activityLoader->findById($args["id"], true);
-    $response = $this->renderer->render($response, 'activity_edit.phtml', ['activity' => $activity, "router" => $this->router]);
+
+    $action = null;
+    $postBody = null;
+    $status = null;
+    if ($request->isPost()) {
+        $postBody = $request->getParsedBody();
+        if (isset($postBody["actionSave"])) {
+            $action = "save";
+            $status = "saved"; // todo - at least pretend to handle errors
+            $activity = $activityLoader->save($args, $postBody, $action);
+
+            // TODO - redirect to the URL with the activity id
+
+            //$response->redirect($app->urlFor('activity-detail', $activity->id), 303);
+        } elseif (isset($postBody["actionDelete"])) {
+            $action = "delete";
+            $status = "deleted"; // todo 
+
+            // TODO - redirect to the /edit page
+
+            //$response->redirect($app->urlFor('activity-detail'), 303);
+        }
+    }
+
+    if (isset($args["id"])) {
+        $activity = $activityLoader->findById($args["id"], true);
+    } else {
+        $activity = null;
+    }
+
+    $response = $this->renderer->render(
+        $response, 
+        'activity_edit.phtml', 
+        [
+                'activity' => $activity, 
+                'status' => $status,
+                "router" => $this->router
+        ]
+    );
     return $response;
 })->setName('activity-detail');
-
-
-$app->get('/tickets', function (Request $request, Response $response) {
-    $response = $this->renderer->render($response, 'fake.phtml', ['tickets' => "I guess there are tix?", "router" => $this->router]);
-    return $response;
-})->setName('ticket-msg');
 
 // // default view here
 // $app->get('/[{name}]', function (Request $request, Response $response, array $args) {

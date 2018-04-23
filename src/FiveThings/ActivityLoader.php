@@ -44,9 +44,51 @@ class ActivityLoader extends Loader {
         }
     }
 
-    public function save($activity) {
+    public function save($args, $postBody, $action) {
+
+        $activity = false;
+        if ($args["id"] != "edit") {
+            $activity = $this->findById($args["id"], true);
+            if ($action == "delete") {
+                $this->delete($activity);
+                return;
+            }
+        }
+
+        $status = $args["status"] ?? "";
+
+        if ($action != "save") {
+            // this should not happen
+            //throw new Exception("Unexpected action: $action");
+        }
+
+        $activityName = $postBody["activityName"];
+        $itemNames = explode("\n", $postBody["itemNames"]);
+        $itemNames = array_values(
+            array_filter($itemNames, function ($e) {
+                return $e != '' && !ctype_space($e); // filter out blank items
+            })
+        );
+
+        $items = array();
+        foreach ($itemNames as $name) {
+            $items[] = new ActivityItem(array(
+                'Name' => $name,
+                //'Type' => 'thing', // todo
+            ));
+        }
+
+        if ($activity) {
+            $activity->name = $activityName;
+        } else {
+            $activity = new Activity($args);
+        }
+        $activity->items = $items;
+
         if ($activity->id > 0) {
             // this is an existing activity, so UPDATE it here
+
+            // var_dump($activity);
 
             $this->db->beginTransaction();
 
@@ -58,10 +100,12 @@ class ActivityLoader extends Loader {
                 $stmt->execute();
 
                 $stmt = $this->db->prepare("DELETE FROM ActivityItem WHERE ActivityId = :id");
-                $stmt->bindParam(":id", $this->id);
+                $stmt->bindParam(":id", $activity->id);
                 $stmt->execute();
 
                 foreach ($activity->items as $item) {
+                    // echo "nm: " . $item->name . ", tp: " . $item->type . "\n";
+
                     $stmt = $this->db->prepare("INSERT INTO ActivityItem (ActivityId, Type, Name) Values (:id, :type, :name)");
                     $stmt->bindParam(':id', $activity->id, PDO::PARAM_INT);
                     $stmt->bindParam(':type', $item->type, PDO::PARAM_STR);
@@ -85,7 +129,7 @@ class ActivityLoader extends Loader {
 
             $activity->id = $this->db->lastInsertId();            
 
-            foreach ($this->items as $item) {
+            foreach ($activity->items as $item) {
                 $stmt = $this->db->prepare("INSERT INTO ActivityItem (ActivityId, Type, Name) Values (:activityId, :type, :name)");
                 $stmt->bindParam(':activityId', $activity->id, PDO::PARAM_INT);
                 $stmt->bindParam(':type', $item->type, PDO::PARAM_STR);
@@ -146,7 +190,8 @@ class ActivityLoader extends Loader {
                 }
                 return $activity;                
             }
+        } else {
+            print_r($stmt->errorInfo());
         }
-        return new Activity();
     }
 }

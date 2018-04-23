@@ -30,6 +30,7 @@ $container['db'] = function ($c) {
 };
 
 // my classes
+
 $container['activity.loader'] = function ($c) {
     return new FiveThings\ActivityLoader($c->db);
 };
