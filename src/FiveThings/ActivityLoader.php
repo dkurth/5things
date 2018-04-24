@@ -194,4 +194,97 @@ class ActivityLoader extends Loader {
             print_r($stmt->errorInfo());
         }
     }
+
+    public function randomButtonLabel($btnType) {
+        // returns a random word for the buttons
+        if ($btnType == "save") {
+            $labels = array(
+                "save",
+                "preserve",
+                "keep",
+                "perpetuate",
+                "retain",
+                "safeguard",
+                "store",
+                "refrigerate",
+            );            
+        } elseif ($btnType == "delete") {
+            $labels = array(
+                "delete",
+                "destroy",
+                "expunge",
+                "wipe out",
+                "eliminate",
+                "bleep",
+                "obliterate",
+                "squash",
+            );
+        } else {
+            $labels = array(
+                  "rural",
+                  "frugal",
+                  "twin",
+                  "santorum",
+                  "detritus",
+                  "entrepreneurial",
+                  "pronounciation",
+                  "moisture",
+                  "peculiarly",
+                  "crepuscular",
+                  "ubiquitous",
+                  "malarkey",
+                  "bubbles",
+                  "dude",
+                  "torque",
+                  "google",
+                  "visualization",
+                  "cliche",
+                  "floccinaucinihilipilification",
+                  "conundrums",
+                  "doodlesack",
+                  "volunteer",
+                  "mississippilessly",
+                  "calisthenics",
+                  "serendipity",
+                  "grommets",
+                  "dilettante",
+                  "macrosmatic",
+                  "supercalifragilisticexpialidocious",
+                  "flabergasted",
+                  "sphygmomanometer",
+                  "Kardashian",
+                  "hubbub",
+                  "prescription",
+                  "caulking",
+                  "wreath",
+                  "expat",
+                  "jentacular",
+                  "schnapps",
+                  "zdravstvuite",
+                  "phlegm",
+                  "specific",
+                  "quproch",
+                  "riboflavin",
+                  "cubersome",
+                  "garage",
+                  "flummoxed",
+                  "profiterole",
+                  "ruler",
+                  "dingleberry",
+                  "egg",
+                  "ombudsman",
+                  "perpendicular",
+                  "collate",
+                  "abruptly",
+                  "word",
+                  "bitter",
+                  "cellar",
+                  "airworthy",
+                  "stupendous",
+            );
+        }
+
+        shuffle($labels);
+        return array_slice($labels, 0, 1)[0];
+    }
 }

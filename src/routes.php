@@ -65,6 +65,8 @@ $app->map(['GET', 'POST'], '/activity/{id}', function (Request $request, Respons
         [
                 'activity' => $activity, 
                 'status' => $status,
+                'submitSave' => $activityLoader->randomButtonLabel("save"),
+                'submitDelete' => $activityLoader->randomButtonLabel("delete"),
                 "router" => $this->router
         ]
     );
