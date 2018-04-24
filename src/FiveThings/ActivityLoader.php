@@ -44,22 +44,20 @@ class ActivityLoader extends Loader {
         }
     }
 
-    public function save($args, $postBody, $action) {
+    public function save($id, $postBody, $action) {
 
         $activity = false;
-        if ($args["id"] != "edit") {
-            $activity = $this->findById($args["id"], true);
+        if ($id != "edit") {
+            $activity = $this->findById($id, true);
             if ($action == "delete") {
                 $this->delete($activity);
                 return;
             }
         }
 
-        $status = $args["status"] ?? "";
-
         if ($action != "save") {
             // this should not happen
-            //throw new Exception("Unexpected action: $action");
+            return;
         }
 
         $activityName = $postBody["activityName"];
@@ -81,14 +79,14 @@ class ActivityLoader extends Loader {
         if ($activity) {
             $activity->name = $activityName;
         } else {
-            $activity = new Activity($args);
+            $activity = new Activity(array(
+                'Name' => $activityName
+            ));
         }
         $activity->items = $items;
 
         if ($activity->id > 0) {
             // this is an existing activity, so UPDATE it here
-
-            // var_dump($activity);
 
             $this->db->beginTransaction();
 
@@ -104,7 +102,6 @@ class ActivityLoader extends Loader {
                 $stmt->execute();
 
                 foreach ($activity->items as $item) {
-                    // echo "nm: " . $item->name . ", tp: " . $item->type . "\n";
 
                     $stmt = $this->db->prepare("INSERT INTO ActivityItem (ActivityId, Type, Name) Values (:id, :type, :name)");
                     $stmt->bindParam(':id', $activity->id, PDO::PARAM_INT);
@@ -122,7 +119,9 @@ class ActivityLoader extends Loader {
             }
 
         } else {
+
             // this is a new activity, so create it
+
             $stmt = $this->db->prepare("INSERT INTO Activity (Name) Values(:name)");
             $stmt->bindParam(':name', $activity->name);
             $result = $stmt->execute();
@@ -137,6 +136,7 @@ class ActivityLoader extends Loader {
                 $stmt->execute();
             }
         }
+        return $activity->id;
     }
 
     // Load the ActivityItem records

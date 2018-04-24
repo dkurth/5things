@@ -12,7 +12,7 @@ require('header.phtml');
 <table class="table table-condensed" id="activity-list">
     <?php foreach ($activities as $activity): ?>
         <tr>
-            <td class="ft-filterable"><a href="/activity/<?php echo $activity->id; ?>"><?php echo $activity->name; ?></a></td>
+            <td class="ft-filterable"><a href="/activity/<?php echo $activity->id; ?>"><?php echo empty($activity->name) ? "(no name)" : $activity->name; ?></a></td>
         </tr>
     <?php endforeach; ?>
 </table>

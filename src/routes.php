@@ -35,28 +35,23 @@ $app->map(['GET', 'POST'], '/activity/{id}', function (Request $request, Respons
 
     $activityLoader = $this['activity.loader'];
 
+    $parsedBody = $request->getParsedBody();
     $action = null;
-    $postBody = null;
-    $status = null;
+
     if ($request->isPost()) {
-        $postBody = $request->getParsedBody();
-        if (isset($postBody["actionSave"])) {
+        if (isset($parsedBody["actionSave"])) {
             $action = "save";
-            $status = "saved"; // todo - at least pretend to handle errors
-            $activity = $activityLoader->save($args, $postBody, $action);
-
-            // TODO - redirect to the URL with the activity id
-
-            //$response->redirect($app->urlFor('activity-detail', $activity->id), 303);
-        } elseif (isset($postBody["actionDelete"])) {
+            $activityId = $activityLoader->save($args["id"], $parsedBody, $action); // id is "edit" when new
+            return $response->withRedirect("/activity/$activityId?status=saved");
+        } elseif (isset($parsedBody["actionDelete"])) {
             $action = "delete";
-            $status = "deleted"; // todo 
-
-            // TODO - redirect to the /edit page
-
-            //$response->redirect($app->urlFor('activity-detail'), 303);
+            $activityLoader->save($args["id"], $parsedBody, $action);
+            return $response->withRedirect("/activity/edit?status=deleted");
         }
     }
+
+    $qs = $request->getQueryParams();
+    $status = $qs["status"] ?? "";
 
     if (isset($args["id"])) {
         $activity = $activityLoader->findById($args["id"], true);

@@ -9,18 +9,6 @@ if ($status == "saved") {
     $msg = "Deleted!";
 }
 
-// if ($actionTaken == "delete" && isset($_REQUEST['id'])) {
-//     $activity = Activity::findById($_REQUEST['id']);
-//     try {
-//         $activity->delete();
-//         header("Location: $basePath/activity/edit?status=deleted");
-//         exit();
-//     } catch (Exception $e) {
-//         var_dump($e);
-//         exit();
-//     }
-// }
-
 $submitSave = "Grommet"; // Dictionary::saveWord();
 $submitDelete = "Walrus"; // Dictionary::deleteWord();
 ?>
