@@ -18,22 +18,30 @@ if ($status == "saved") {
     </p>
     <?php } ?>
 
-    <h1>
+    <h1 style="margin-bottom: 20px;">
         <?php echo $editMode ? "Edit" : "Create" ?> an activity
         <?php if ($editMode) { ?>
             <a style="font-size:0.5em; float: right; margin-top: 15px;" href="/activity/edit">Create another</a>
         <?php } ?>
     </h1>
     <div class="form-group">
-        <?php if ($activity): ?>
-            <input class="form-control" id="activityName" name="activityName" value="<?php echo $activity->name;?>">
-        <?php else: ?>
-            <input class="form-control" id="activityName" name="activityName" placeholder="Walking your dog">
-        <?php endif; ?>
+        <div class="col-sm-3" style="font-size:14pt; padding: 3px 5px 0 0; text-align: right;  ">You are...</div>
+        <div class="col-sm-9" style="padding: 0;">
+            <?php if ($activity): ?>
+                <input class="form-control" id="activityName" name="activityName" value="<?php echo $activity->name;?>">
+            <?php else: ?>
+                <input class="form-control" id="activityName" name="activityName" placeholder="...walking your dog">
+            <?php endif; ?>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="itemNames">Items</label>
-        <textarea class="form-control" id="itemNames" name="itemNames" rows="10"><?php if ($activity) {
+    <div class="form-group" style="margin-top: 68px;">
+        <label for="itemNames">Related Items</label>
+        <textarea class="form-control" id="itemNames" name="itemNames" rows="10" 
+        placeholder=
+"the leash
+your shoes
+the poop bag
+your self-esteem"><?php if ($activity) {
             foreach ($activity->items as $item) {
                 echo $item->name . "\n";
             }
@@ -41,7 +49,9 @@ if ($status == "saved") {
     </div>
 
     <input type="submit" class="btn btn-success pull-left" name="actionSave" value="<?php echo $submitSave ?>">
+    <?php if ($activity) { ?>
     <input type="submit" class="btn btn-danger pull-right ft-confirm" name="actionDelete" value="<?php echo $submitDelete ?>">
+    <?php } ?>
 </form>
 
 </body>
