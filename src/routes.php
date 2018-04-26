@@ -5,6 +5,17 @@ use Slim\Http\Response;
 
 // Routes
 
+// To generate credentials for the config file, run this command: htpasswd -nbBC 10 username password
+$configJson = file_get_contents("../src/config.json");
+$config = json_decode($configJson, true);
+
+$app->add(new Tuupola\Middleware\HttpBasicAuthentication([
+    "path" => "/activity",
+    "secure" => false, // required if you don't have an SSL cert
+    "realm" => "Protected",
+    "users" => $config['users']
+]));
+
 // Show a random activity, with some attributes replaced (the home screen):
 
 $app->get('/', function (Request $request, Response $response, array $args) {

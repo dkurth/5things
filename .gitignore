@@ -4,3 +4,4 @@
 .DS_Store
 /__archive/*
 public/5things.db3
+src/config.json
