@@ -1,13 +1,20 @@
 <?php
 require('header.phtml');
+
+$activityCount = sizeof($activities);
 ?>
 
 <h1>
     Activities 
-    <a style="font-size:0.5em; float: right; margin-top: 15px;" href="/activity/edit">Create new</a>
+    <a style="font-size: 0.5em; float: right; margin-top: 15px;" href="/activity/edit">Create new</a>
 </h1>
 
-<input type="text" class="ft-filter" data-ft-filter-table="activity-list" placeholder="filter...">
+<p style="font-size: 0.6em;">
+    There are <?php echo $activityCount; ?> active activities in the database. 
+    <a href="/activity/edit">Wanna make it <?php echo $activityCount+1; ?>?</a>
+</p>
+
+<input type="text" class="ft-filter" data-ft-filter-table="activity-list" placeholder="search...">
 
 <table class="table table-condensed" id="activity-list">
     <?php foreach ($activities as $activity): ?>

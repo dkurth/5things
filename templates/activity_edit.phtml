@@ -10,14 +10,19 @@ if ($status == "saved") {
 }
 ?>
 
+<?php if (isset($msg)) { ?>
+<p class="page-msg">
+    <?php echo $msg ?>
+</p>
+<p style="float: right; font-size:0.6em;" >
+    <a href="/activity/edit">Create another</a>
+    |
+    <a href="/activity/list">Database</a>
+</p>
+
+<?php } else { ?>
+
 <form method="post">
-
-    <?php if (isset($msg)) { ?>
-    <p class="page-msg">
-        <?php echo $msg ?>
-    </p>
-    <?php } ?>
-
     <h1 style="margin-bottom: 20px;">
         <?php echo $editMode ? "Edit" : "Create" ?> an activity
         <?php if ($editMode) { ?>
@@ -53,6 +58,8 @@ your self-esteem"><?php if ($activity) {
     <input type="submit" class="btn btn-danger pull-right ft-confirm" name="actionDelete" value="<?php echo $submitDelete ?>">
     <?php } ?>
 </form>
+
+<?php } ?>
 
 </body>
 </html>

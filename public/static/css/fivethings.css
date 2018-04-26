@@ -1,5 +1,5 @@
 body {
-    width: 400px;
+    width: 600px;
     margin: auto;
     text-align: left;
     font-size: 3em;
@@ -9,12 +9,6 @@ body {
 .activity, .attr, .repl {
     font-weight: bold;
 }
-
-form {
-/*    margin-left: auto;
-    margin-right: auto;
-    width: 400px;
-*/}
 
 .navbar {
     font-size: 18px;
