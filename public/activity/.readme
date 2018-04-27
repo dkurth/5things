@@ -1,0 +1,7 @@
+If you want security on the database editing, you must create a .htaccess file in this directory.  It will look something like this:
+
+AuthType Basic
+AuthName "Access the 5 Things Database"
+AuthUserFile /path/to/.htpasswd
+Require valid-user
+
