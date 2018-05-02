@@ -156,7 +156,7 @@ class ActivityLoader extends Loader {
 
     public function getAll($includeItems = false) {
         $activities = array();
-        $stmt = $this->db->prepare("SELECT Id, Name FROM Activity ORDER BY Name ASC");
+        $stmt = $this->db->prepare("SELECT Id, Name FROM Activity ORDER BY Name COLLATE NOCASE ASC");
         $stmt->execute();
         while($row = $stmt->fetch()) {
             $activity = new Activity($row);
