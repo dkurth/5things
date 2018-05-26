@@ -154,6 +154,30 @@ class ActivityLoader extends Loader {
         }
     }
 
+    public function checkDuplicate($name) {
+        // Find and return Activity records that match the words from $name.
+
+        $maxDupes = 20; // return up to this many results
+
+        $words = preg_split('/\s+/', $name);
+        $q = "SELECT Id, Name FROM Activity WHERE ";
+        $wordCount = count($words);
+        $likes = array();
+        for ($i = 0; $i < $wordCount; $i++) {
+            $likes[] = "Name LIKE ?";
+            $words[$i] = "%" . $words[$i] . "%";
+        }
+        $q = $q . implode($likes, " AND ") . " LIMIT " . $maxDupes;
+
+        $stmt = $this->db->prepare($q);
+        $stmt->execute($words);
+        $matches = array();
+        while ($results = $stmt->fetch()) {
+            $matches[] = ActivityLoader::findById($results["Id"]);
+        }
+        return $matches;
+    }
+
     public function getAll($includeItems = false) {
         $activities = array();
         $stmt = $this->db->prepare("SELECT Id, Name FROM Activity ORDER BY Name COLLATE NOCASE ASC");

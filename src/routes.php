@@ -18,6 +18,11 @@ $app->get('/', function (Request $request, Response $response, array $args) {
     ]);
 });
 
+// $app->get('/activity/hi', function (Request $request, Response $response, array $args) {
+//     $body = $response->getBody();
+//     $body->write('Hello there');
+//     return $response;
+// });
 
 // Listing all activities:
 
@@ -27,6 +32,15 @@ $app->get('/activity/list', function (Request $request, Response $response, arra
     $response = $this->renderer->render($response, 'activity_list.phtml', ['activities' => $activities, "router" => $this->router]);
     return $response;
 })->setName('activity-list');
+
+$app->post('/activity/checkDuplicate', function(Request $request, Response $response, array $args) {
+    
+    $parsedBody = $request->getParsedBody();
+    $activityLoader = $this['activity.loader'];
+    $activities = $activityLoader->checkDuplicate($parsedBody["activityName"]);
+    $response = $this->renderer->render($response, 'activity_dupes.phtml', ['activities' => $activities, "router" => $this->router]);
+    return $response;
+});
 
 
 // Creating and editing activities:

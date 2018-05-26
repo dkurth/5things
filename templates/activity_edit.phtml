@@ -39,7 +39,10 @@ if ($status == "saved") {
             <?php endif; ?>
         </div>
     </div>
-    <div class="form-group" style="margin-top: 68px;">
+
+    <div id="dupes" style="margin-top: 80px;"></div>
+
+    <div class="form-group" style="margin-top: 0px;">
         <label for="itemNames">Related Items</label>
         <textarea class="form-control" id="itemNames" name="itemNames" rows="10" 
         placeholder=
@@ -60,6 +63,30 @@ your self-esteem"><?php if ($activity) {
 </form>
 
 <?php } ?>
+
+<script>
+$(document).ready(function() {
+    $("#activityName").on('blur', function(evt) {
+        var activityName = $(evt.target).val();
+        if (activityName.trim() === '') {
+            $("#dupes").html('');
+            return;
+        }
+        $.ajax({
+            url: "/activity/checkDuplicate",
+            type: "POST",
+            data: {
+                activityName: activityName
+            },
+            dataType: "html",
+            success: function(data) {
+                console.log("Got this: " + data);
+                $("#dupes").html(data);
+            }
+        });
+    });
+});
+</script>
 
 </body>
 </html>

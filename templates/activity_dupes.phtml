@@ -1,0 +1,13 @@
+<?php if (count($activities) > 0): ?>
+
+<p><b>Similar activities are already in the database.</b>  Feel free to edit them instead!</p>
+
+<ul>
+<?php foreach ($activities as $activity): ?>
+    <li>
+        <a href="/activity/<?php echo $activity->id; ?>"><?php echo empty($activity->name) ? "(no name)" : $activity->name; ?></a>
+    </li>
+<?php endforeach; ?>
+</ul>
+
+<?php endif; ?>
