@@ -7,9 +7,9 @@ require('header.phtml');
 
 <?php
 foreach ($activity->randomActivityItems($replCount) as $item) {
-    $replItem = $replacements[--$replCount]->name;
+    $replItem = $replacements[--$replCount];
 
-    echo "<p><span class='attr'>" . ucfirst($item->name) . "</span> " . \FiveThings\Utils::isAre($item->name) . " <span class='repl'>" . \FiveThings\Utils::aAn($replItem) . " " . $replItem . ".</span></p>";
+    echo "<p><span class='attr'>" . ucfirst($item->name) . "</span> " . \FiveThings\Utils::isAre($item->name) . " <span class='repl'>" . $replItem->article . " " . $replItem->name . ".</span></p>";
 }
 ?>
 
