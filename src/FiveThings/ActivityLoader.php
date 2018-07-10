@@ -9,7 +9,7 @@ use \PDO;
 class ActivityLoader extends Loader {
 
     public function getReplacementItems($howMany, $type = 'thing') {
-        $stmt = $this->db->prepare("SELECT Id, Name, Type FROM ReplacementItem WHERE Type = :type ORDER BY RANDOM() LIMIT :howmany");
+        $stmt = $this->db->prepare("SELECT Id, Name, Type, Article FROM ReplacementItem WHERE Type = :type ORDER BY RANDOM() LIMIT :howmany");
         $stmt->bindParam(':type', $type);
         $stmt->bindParam(':howmany', $howMany);
         $result = $stmt->execute();
