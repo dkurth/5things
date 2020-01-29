@@ -1,6 +1,6 @@
 # Five Things
 
-The 5 Things Generator is intended to facilitate rehearsing the game of 5 Things by automatically generating an active activity and three substitutions.
+The 5 Things Generator is intended to facilitate rehearsing the game of 5 Things by automatically generating an active activity and three substitutions
 
 ## Features
 The 5 Things Generator contains the following features:
@@ -19,6 +19,7 @@ This script was developed independently by a CSz player (who came up with the id
 ## Future plans
 
 Some of our planned enhancements are:
+
 
 <ul>
     <li>An interface for editing the replacement nouns (you can only edit activities currently).</li>
