@@ -44,7 +44,7 @@ if ($status == "saved") {
 
     <div class="form-group" style="margin-top: 0px;">
         <label for="itemNames">Related Items</label>
-        <textarea class="form-control" id="itemNames" name="itemNames" rows="10" 
+        <textarea class="form-control" id="itemNames" name="itemNames" rows="10"
         placeholder=
 "the leash
 your shoes
@@ -55,6 +55,12 @@ your self-esteem"><?php if ($activity) {
             }
         } ?></textarea>
     </div>
+
+    <?php $simpleChecked = ($activity && $activity->isSimple) ? 'checked' : ''; ?>
+    <p style="font-size: 10pt;">
+        <input type="checkbox" name="isSimple" <?php echo $simpleChecked; ?>>
+        This activity is simple.
+    </p>
 
     <input type="submit" class="btn btn-success pull-left" name="actionSave" value="<?php echo $submitSave ?>">
     <?php if ($activity) { ?>

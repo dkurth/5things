@@ -13,7 +13,18 @@ $app->get('/', function (Request $request, Response $response, array $args) {
     $replacements = $activityLoader->getReplacementItems(3);
 
     $response = $this->renderer->render($response, 'activity_random.phtml', [
-        'activity' => $activity, 
+        'activity' => $activity,
+        'replacements' => $replacements
+    ]);
+});
+
+$app->get('/simple', function (Request $request, Response $response, array $args) {
+    $activityLoader = $this['activity.loader'];
+    $activity = $activityLoader->getRandomSimpleActivity(true);
+    $replacements = $activityLoader->getSimpleReplacementItems(3);
+
+    $response = $this->renderer->render($response, 'activity_random.phtml', [
+        'activity' => $activity,
         'replacements' => $replacements
     ]);
 });
@@ -34,7 +45,7 @@ $app->get('/activity/list', function (Request $request, Response $response, arra
 })->setName('activity-list');
 
 $app->post('/activity/checkDuplicate', function(Request $request, Response $response, array $args) {
-    
+
     $parsedBody = $request->getParsedBody();
     $activityLoader = $this['activity.loader'];
     $activities = $activityLoader->checkDuplicate($parsedBody["activityName"]);
@@ -74,10 +85,10 @@ $app->map(['GET', 'POST'], '/activity/{id}', function (Request $request, Respons
     }
 
     $response = $this->renderer->render(
-        $response, 
-        'activity_edit.phtml', 
+        $response,
+        'activity_edit.phtml',
         [
-                'activity' => $activity, 
+                'activity' => $activity,
                 'status' => $status,
                 'submitSave' => $activityLoader->randomButtonLabel("save"),
                 'submitDelete' => $activityLoader->randomButtonLabel("delete"),

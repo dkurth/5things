@@ -20,7 +20,22 @@ class ActivityLoader extends Loader {
                 $replacementItems[] = new ReplacementItem($row);
             }
         }
-        return $replacementItems;        
+        return $replacementItems;
+    }
+
+    public function getSimpleReplacementItems($howMany, $type = 'thing') {
+        $stmt = $this->db->prepare("SELECT Id, Name, Type, Article FROM ReplacementItem WHERE Type = :type AND IsSimple ORDER BY RANDOM() LIMIT :howmany");
+        $stmt->bindParam(':type', $type);
+        $stmt->bindParam(':howmany', $howMany);
+        $result = $stmt->execute();
+        $replacementItems = array();
+
+        if ($stmt->execute()) {
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $replacementItems[] = new ReplacementItem($row);
+            }
+        }
+        return $replacementItems;
     }
 
     public function delete($activity) {
@@ -76,11 +91,23 @@ class ActivityLoader extends Loader {
             ));
         }
 
+        if (isset($postBody['isSimple'])) {
+          $isSimple = true;
+        } else {
+          $isSimple = false;
+        }
+
+        // var_dump($postBody);
+        // print("isSimple = $isSimple");
+        // exit();
+
         if ($activity) {
             $activity->name = $activityName;
+            $activity->isSimple = $isSimple;
         } else {
             $activity = new Activity(array(
-                'Name' => $activityName
+                'Name' => $activityName,
+                'IsSimple' => $isSimple,
             ));
         }
         $activity->items = $items;
@@ -92,8 +119,9 @@ class ActivityLoader extends Loader {
 
             try {
 
-                $stmt = $this->db->prepare("UPDATE Activity SET Name = :name WHERE Id = :id");
+                $stmt = $this->db->prepare("UPDATE Activity SET Name = :name, IsSimple = :isSimple WHERE Id = :id");
                 $stmt->bindParam(':name', $activity->name);
+                $stmt->bindParam(":isSimple", $activity->isSimple);
                 $stmt->bindParam(':id', $activity->id);
                 $stmt->execute();
 
@@ -126,7 +154,7 @@ class ActivityLoader extends Loader {
             $stmt->bindParam(':name', $activity->name);
             $result = $stmt->execute();
 
-            $activity->id = $this->db->lastInsertId();            
+            $activity->id = $this->db->lastInsertId();
 
             foreach ($activity->items as $item) {
                 $stmt = $this->db->prepare("INSERT INTO ActivityItem (ActivityId, Type, Name) Values (:activityId, :type, :name)");
@@ -185,11 +213,22 @@ class ActivityLoader extends Loader {
         while($row = $stmt->fetch()) {
             $activity = new Activity($row);
             if ($includeItems) {
-                $this->loadItems($activity);                
+                $this->loadItems($activity);
             }
             $activities[] = $activity;
         }
         return $activities;
+    }
+
+    public function getRandomSimpleActivity($includeItems = false) {
+        $stmt = $this->db->prepare("SELECT Id, Name FROM Activity a WHERE a.IsSimple ORDER BY RANDOM() LIMIT 1");
+        $stmt->execute();
+        $row = $stmt->fetch();
+        $activity = new Activity($row);
+        if ($includeItems) {
+            $this->loadItems($activity);
+        }
+        return $activity;
     }
 
     public function getRandomActivity($includeItems = false) {
@@ -198,21 +237,21 @@ class ActivityLoader extends Loader {
         $row = $stmt->fetch();
         $activity = new Activity($row);
         if ($includeItems) {
-            $this->loadItems($activity);                
+            $this->loadItems($activity);
         }
         return $activity;
     }
 
     public function findById($id, $includeItems = false) {
-        $stmt = $this->db->prepare("SELECT Id, Name FROM Activity WHERE Id = :id");
+        $stmt = $this->db->prepare("SELECT Id, Name, IsSimple FROM Activity WHERE Id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         if ($stmt->execute()) {
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $activity = new Activity($row);
                 if ($includeItems) {
-                    $this->loadItems($activity);                
+                    $this->loadItems($activity);
                 }
-                return $activity;                
+                return $activity;
             }
         } else {
             print_r($stmt->errorInfo());
@@ -231,7 +270,7 @@ class ActivityLoader extends Loader {
                 "safeguard",
                 "store",
                 "refrigerate",
-            );            
+            );
         } elseif ($btnType == "delete") {
             $labels = array(
                 "delete",
