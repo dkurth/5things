@@ -8,9 +8,15 @@ use \PDO;
 
 class ActivityLoader extends Loader {
 
-    public function getReplacementItems($howMany, $type = 'thing') {
+    public function getReplacementItems($howMany, $type = null) {
+      $type = 'person';
+
+      if ($type == null) {
+        $stmt = $this->db->prepare("SELECT Id, Name, Type, Article FROM ReplacementItem ORDER BY RANDOM() LIMIT :howmany");
+      } else {
         $stmt = $this->db->prepare("SELECT Id, Name, Type, Article FROM ReplacementItem WHERE Type = :type ORDER BY RANDOM() LIMIT :howmany");
         $stmt->bindParam(':type', $type);
+      }
         $stmt->bindParam(':howmany', $howMany);
         $result = $stmt->execute();
         $replacementItems = array();
@@ -20,12 +26,19 @@ class ActivityLoader extends Loader {
                 $replacementItems[] = new ReplacementItem($row);
             }
         }
+
         return $replacementItems;
     }
 
     public function getSimpleReplacementItems($howMany, $type = 'thing') {
+
+      if ($type == null) {
+        $stmt = $this->db->prepare("SELECT Id, Name, Type, Article FROM ReplacementItem WHERE IsSimple ORDER BY RANDOM() LIMIT :howmany");
+      } else {
         $stmt = $this->db->prepare("SELECT Id, Name, Type, Article FROM ReplacementItem WHERE Type = :type AND IsSimple ORDER BY RANDOM() LIMIT :howmany");
         $stmt->bindParam(':type', $type);
+      }
+
         $stmt->bindParam(':howmany', $howMany);
         $result = $stmt->execute();
         $replacementItems = array();
