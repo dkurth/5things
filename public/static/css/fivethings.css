@@ -1,6 +1,7 @@
 body {
     width: 700px;
     margin: auto;
+    margin-top: 40px;
     text-align: left;
     font-size: 3em;
     background-color: #FFDC00;
@@ -12,7 +13,9 @@ body {
 
 .navbar {
     font-size: 18px;
-    border-bottom: solid black 2px;
+    border-top: solid black 2px;
+    margin-top: 20px;
+    padding-top: 20px;
 }
 
 table {
@@ -35,4 +38,14 @@ p.page-msg {
 
 #dupes {
     font-size: 12pt;
+}
+
+.mode-current {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
 }

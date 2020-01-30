@@ -1,0 +1,21 @@
+<nav class="navbar">
+  <div class="container-fluid">
+    <ul class="nav navbar-nav">
+      <li class="mode-current">
+          <?php if ($mode == "advanced") { ?>
+            Advanced
+          <?php } else { ?>
+            Beginner
+          <?php } ?>
+      </li>
+      <li>
+          <?php if ($mode == "advanced") { ?>
+            <a href="<?php echo $basePath ?>/beginner">Beginner Mode</a></li>
+          <?php } else { ?>
+            <a href="<?php echo $basePath ?>/">Advanced Mode</a></li>
+          <?php } ?>
+      <li><a href="<?php echo $basePath ?>/activity/list">Database</a></li>
+      <li><a href="https://github.com/dkurth/5things">GitHub</a></li>
+    </ul>
+  </div>
+</nav>

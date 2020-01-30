@@ -14,18 +14,20 @@ $app->get('/', function (Request $request, Response $response, array $args) {
 
     $response = $this->renderer->render($response, 'activity_random.phtml', [
         'activity' => $activity,
-        'replacements' => $replacements
+        'replacements' => $replacements,
+        'mode' => 'advanced'
     ]);
 });
 
-$app->get('/simple', function (Request $request, Response $response, array $args) {
+$app->get('/beginner', function (Request $request, Response $response, array $args) {
     $activityLoader = $this['activity.loader'];
     $activity = $activityLoader->getRandomSimpleActivity(true);
     $replacements = $activityLoader->getSimpleReplacementItems(3);
 
     $response = $this->renderer->render($response, 'activity_random.phtml', [
         'activity' => $activity,
-        'replacements' => $replacements
+        'replacements' => $replacements,
+        'mode' => 'simple'
     ]);
 });
 
